@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" href="./assets/icons/favicon-32x32.png" type="image/png" />
+
+    <title>Personal Finance App | Pots</title>
+
+    <link href="./css/output.css" rel="stylesheet" />
+
+    <script
+      src="https://kit.fontawesome.com/6d0d529000.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+    </style>
+  </head>
+
+  <body>
+    <div id="app-container" class="flex min-h-screen">
+      <!-- SIDEBAR -->
+      <aside
+        class="fixed bottom-0 left-0 z-50 flex h-20 w-full shrink-0 p-4 bg-gray-900 rounded-tr-xl rounded-tl-xl lg:static lg:rounded-tl-none lg:pl-0 lg:h-screen lg:w-72 lg:flex-col lg:justify-between"
+      >
+        <div
+          id="container"
+          class="flex h-full w-full flex-row items-center overflow-hidden bg-gray-900 lg:h-screen lg:flex-col lg:items-start lg:pb-5 lg:pr-5 lg:pt-5"
+        >
+          <!-- LOGO -->
+          <div class="logo hidden items-start pl-8 lg:mt-6 lg:flex">
+            <img src="./assets/icons/logo-large.svg" alt="Finance" />
+          </div>
+
+          <!-- OVERVIEW -->
+          <a
+            href="./index.html"
+            class="block h-full flex-1 lg:h-auto lg:w-full lg:flex-none"
+          >
+            <div
+              class="relative mt-0 flex h-full w-full items-center justify-center rounded-none hover:bg-gray-700 hover:cursor-pointer lg:mt-16 lg:h-auto lg:justify-start lg:rounded-r-2xl lg:pb-4 lg:pl-8 lg:pr-4 lg:pt-4"
+            >
+              <i class="fa-solid fa-house text-xl text-gray-300 lg:mr-8"></i>
+
+              <p class="hidden text-lg font-medium text-gray-300 lg:block">
+                Overview
+              </p>
+            </div>
+          </a>
+
+          <!-- TRANSACTIONS -->
+          <a
+            href="./transactions.html"
+            class="block h-full flex-1 lg:h-auto lg:w-full lg:flex-none"
+          >
+            <div
+              class="mt-0 flex h-full w-full items-center justify-center rounded-none hover:cursor-pointer hover:bg-gray-700 lg:mt-2 lg:h-auto lg:justify-start lg:rounded-r-2xl lg:pb-4 lg:pl-8 lg:pr-4 lg:pt-4"
+            >
+              <i
+                class="fa-solid fa-arrow-right-arrow-left fa-rotate-270 text-xl text-gray-300 lg:mr-8"
+              ></i>
+
+              <p class="hidden text-lg font-medium text-gray-300 lg:block">
+                Transactions
+              </p>
+            </div>
+          </a>
+
+          <!-- BUDGETS -->
+          <a
+            href="./budgets.html"
+            class="block h-full flex-1 lg:h-auto lg:w-full lg:flex-none"
+          >
+            <div
+              class="mt-0 flex h-full w-full items-center justify-center rounded-none hover:cursor-pointer hover:bg-gray-700 lg:mt-2 lg:h-auto lg:justify-start lg:rounded-r-2xl lg:pb-4 lg:pl-8 lg:pr-4 lg:pt-4"
+            >
+              <i
+                class="fa-solid fa-chart-pie text-xl text-gray-300 lg:mr-8"
+              ></i>
+
+              <p class="hidden text-lg font-medium text-gray-300 lg:block">
+                Budgets
+              </p>
+            </div>
+          </a>
+
+          <!-- POTS -->
+          <a
+            href="./pots.html"
+            class="block h-full flex-1 lg:h-auto lg:w-full lg:flex-none"
+          >
+            <div
+              class="relative mt-0 flex h-full w-full items-center justify-center rounded-none bg-white rounded-tl-xl rounded-tr-xl hover:cursor-pointer lg:rounded-tl-none lg:mt-2 lg:h-auto lg:justify-start lg:rounded-r-2xl lg:pb-4 lg:pl-8 lg:pr-4 lg:pt-4"
+            >
+              <p
+                class="absolute bottom-0 left-1/2 h-1 w-8 -translate-x-1/2 bg-emerald-300 lg:left-0 lg:top-0 lg:h-full lg:w-1 lg:translate-x-0"
+              ></p>
+              <i
+                class="fa-solid fa-sack-dollar text-xl text-[#277C87] lg:mr-8"
+              ></i>
+
+              <p class="hidden text-lg font-medium text-gray-900 lg:block">
+                Pots
+              </p>
+            </div>
+          </a>
+
+          <!-- RECURRING BILLS -->
+          <a
+            href="./recurring_bills.html"
+            class="block h-full flex-1 lg:h-auto lg:w-full lg:flex-none"
+          >
+            <div
+              class="mt-0 flex h-full w-full items-center justify-center rounded-none hover:cursor-pointer hover:bg-gray-700 lg:mt-2 lg:h-auto lg:justify-start lg:rounded-r-2xl lg:pb-4 lg:pl-8 lg:pr-4 lg:pt-4"
+            >
+              <i class="fa-solid fa-receipt text-xl text-gray-300 lg:mr-8"></i>
+
+              <p class="hidden text-lg font-medium text-gray-300 lg:block">
+                Recurring Bills
+              </p>
+            </div>
+          </a>
+
+          <!-- MINIMIZE MENU -->
+          <div
+            id="minimize-menu"
+            class="absolute bottom-8 left-0 hidden w-67 items-center rounded-r-2xl pb-4 pl-8 pr-4 pt-4 hover:cursor-pointer hover:bg-gray-700 lg:flex"
+          >
+            <i
+              class="fa-solid fa-arrow-left-long mr-8 text-xl text-gray-300"
+            ></i>
+
+            <p class="text-lg font-medium text-gray-300">Minimize Menu</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main class="min-w-0 flex-1 bg-[#f8f4f0] p-4 pb-24 lg:p-8 lg:pb-8">
+        <!-- HEADER -->
+        <header>
+          <h1 class="text-3xl font-bold lg:text-4xl">Overview</h1>
+        </header>
+
+        <!-- SUMMARY -->
+      </main>
+    </div>
+
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>
