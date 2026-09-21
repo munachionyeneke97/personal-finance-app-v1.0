@@ -23,6 +23,13 @@ import {
   editPotThemeSelection,
   editPot,
   deletePot,
+  newBudgetThemeSelection,
+  newBudgetCategorySelection,
+  createNewBudget,
+  editBudgetThemeSelection,
+  editBudgetCategorySelection,
+  editBudget,
+  deleteBudget,
 } from "./main.js";
 import {
   renderPaginationBtns,
@@ -34,6 +41,7 @@ const currentPath = window.location.pathname;
 
 const appContainer = document.querySelector("#app-container");
 
+// Handles all click events
 const handleClickEvent = (event) => {
   const previousButton = event.target.closest("#prev-btn");
   const nextButton = event.target.closest("#next-btn");
@@ -76,6 +84,41 @@ const handleClickEvent = (event) => {
   );
   const confirmDeleteSavingsPot = event.target.closest(
     ".confirm-delete-savings-btn",
+  );
+  const openNewBudgetModal = event.target.closest("#new-budget-btn");
+  const closeNewBudgetModal = event.target.closest(
+    "#close-new-budget-modal-btn",
+  );
+  const budgetDropdownBtn = event.target.closest(".budget-dropdown-btn");
+  const budgetCategoryBtn = event.target.closest(
+    ".budget-category-dropdown-btn",
+  );
+  const newBudgetDropdownBtn = event.target.closest(".new-budget-dropdown-btn");
+  const newBudgetThemeBtn = event.target.closest("a[data-budgettheme]");
+  const newBudgetCategoryBtn = event.target.closest("a[data-budgetcategory]");
+  const addNewBudgetBtn = event.target.closest(".add-new-budget-btn");
+  const openEditBudgetModal = event.target.closest(".open-edit-budget-modal");
+  const closeEditBudgetModal = event.target.closest(
+    ".close-edit-budget-modal-btn",
+  );
+  const editBudgetThemeDropdownBtn = event.target.closest(
+    ".edited-budget-theme-dropdown-btn",
+  );
+  const editedBudgetThemeBtn = event.target.closest("a[data-editedtheme]");
+  const editBudgetCategoryDropdownBtn = event.target.closest(
+    ".edited-budget-category-dropdown-btn",
+  );
+  const editBudgetCategoryBtn = event.target.closest("a[data-editedcategory]");
+  const editBudgetBtn = event.target.closest(".edit-budget-btn");
+  const openDeleteBudgetModal = event.target.closest(
+    ".open-delete-budget-modal",
+  );
+  const closeDeleteBudgetModal = event.target.closest(
+    ".close-delete-budget-modal-btn",
+  );
+  const deleteBudgetBtn = event.target.closest(".confirm-delete-budget-btn");
+  const cancelDeleteBudgetBtn = event.target.closest(
+    ".reject-delete-budget-btn",
   );
 
   if (liNumber) {
@@ -152,8 +195,6 @@ const handleClickEvent = (event) => {
 
       renderTransactions(sortedTransactions);
       renderPaginationBtns(sortedTransactions);
-
-      console.log(sortedTransactions);
     }
 
     if (currentPath.includes("recurring_bills.html")) {
@@ -167,8 +208,6 @@ const handleClickEvent = (event) => {
   if (categoryBtn) {
     if (currentPath.includes("transactions.html")) {
       const id = Number(categoryBtn.dataset.btn);
-
-      console.log(id);
 
       if (id === 2) {
         displayCategoryBox(event);
@@ -359,8 +398,157 @@ const handleClickEvent = (event) => {
     deleteModal.classList.add("hidden");
     document.body.classList.remove("overflow-hidden");
   }
+
+  if (budgetDropdownBtn) {
+    const currentBudgetBox = budgetDropdownBtn.closest(".budget");
+    const openBudgetMenuModal =
+      currentBudgetBox.querySelector(".budget-dropdown");
+
+    openBudgetMenuModal.classList.toggle("hidden");
+  }
+
+  if (openNewBudgetModal) {
+    const newBudgetModal = document.querySelector(".new-budget-modal");
+
+    newBudgetModal.classList.remove("hidden");
+    newBudgetModal.classList.add("flex");
+    document.body.classList.add("overflow-hidden");
+  }
+
+  if (closeNewBudgetModal) {
+    const newBudgetModal = document.querySelector(".new-budget-modal");
+
+    newBudgetModal.classList.remove("flex");
+    newBudgetModal.classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+  }
+
+  if (budgetCategoryBtn) {
+    const categoryDropdown = document.querySelector(
+      ".budget-category-dropdown",
+    );
+
+    categoryDropdown.classList.toggle("hidden");
+  }
+
+  if (newBudgetThemeBtn) {
+    newBudgetThemeSelection(newBudgetThemeBtn);
+  }
+
+  if (newBudgetCategoryBtn) {
+    newBudgetCategorySelection(newBudgetCategoryBtn);
+  }
+
+  if (addNewBudgetBtn) {
+    let index = 4;
+    index++;
+    createNewBudget(index);
+    const newBudgetModal = document.querySelector(".new-budget-modal");
+
+    newBudgetModal.classList.remove("flex");
+    newBudgetModal.classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+  }
+
+  if (openEditBudgetModal) {
+    const budget = openEditBudgetModal.closest(".budget");
+    const editBudgetModal = budget.querySelector(".edit-budget-modal");
+
+    editBudgetModal.classList.remove("hidden");
+    editBudgetModal.classList.add("flex");
+    document.body.classList.add("overflow-hidden");
+  }
+
+  if (closeEditBudgetModal) {
+    const budget = closeEditBudgetModal.closest(".budget");
+    const editBudgetModal = budget.querySelector(".edit-budget-modal");
+
+    editBudgetModal.classList.remove("flex");
+    editBudgetModal.classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+  }
+
+  if (newBudgetDropdownBtn) {
+    const dropdown = document.querySelector(".budget-theme-dropdown");
+
+    dropdown.classList.toggle("hidden");
+  }
+
+  if (editBudgetThemeDropdownBtn) {
+    const budget = editBudgetThemeDropdownBtn.closest(".budget");
+    const editBudgetThemeDropdown = budget.querySelector(
+      ".edited-theme-dropdown",
+    );
+
+    editBudgetThemeDropdown.classList.toggle("hidden");
+  }
+
+  if (editedBudgetThemeBtn) {
+    editBudgetThemeSelection(editedBudgetThemeBtn);
+  }
+
+  if (editBudgetCategoryDropdownBtn) {
+    const budget = editBudgetCategoryDropdownBtn.closest(".budget");
+    const editBudgetCategoryDropdown = budget.querySelector(
+      ".edited-budget-category-dropdown",
+    );
+
+    editBudgetCategoryDropdown.classList.toggle("hidden");
+  }
+
+  if (editBudgetCategoryBtn) {
+    editBudgetCategorySelection(editBudgetCategoryBtn);
+  }
+
+  if (editBudgetBtn) {
+    editBudget(event);
+    const budget = editBudgetBtn.closest(".budget");
+    const editBudgetModal = budget.querySelector(".edit-budget-modal");
+
+    editBudgetModal.classList.remove("flex");
+    editBudgetModal.classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+  }
+
+  if (openDeleteBudgetModal) {
+    const budget = openDeleteBudgetModal.closest(".budget");
+    const deleteBudgetModal = budget.querySelector(".delete-budget-modal");
+
+    deleteBudgetModal.classList.remove("hidden");
+    deleteBudgetModal.classList.add("flex");
+    document.body.classList.add("overflow-hidden");
+  }
+
+  if (closeDeleteBudgetModal) {
+    const budget = closeDeleteBudgetModal.closest(".budget");
+    const deleteBudgetModal = budget.querySelector(".delete-budget-modal");
+
+    deleteBudgetModal.classList.remove("flex");
+    deleteBudgetModal.classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+  }
+
+  if (deleteBudgetBtn) {
+    deleteBudget(event);
+    const budget = deleteBudgetBtn.closest(".budget");
+    const deleteBudgetModal = budget.querySelector(".delete-budget-modal");
+
+    deleteBudgetModal.classList.remove("flex");
+    deleteBudgetModal.classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+  }
+
+  if (cancelDeleteBudgetBtn) {
+    const budget = cancelDeleteBudgetBtn.closest(".budget");
+    const deleteBudgetModal = budget.querySelector(".delete-budget-modal");
+
+    deleteBudgetModal.classList.remove("flex");
+    deleteBudgetModal.classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+  }
 };
 
+// Handles all keyboard event
 const handleKeyDownEvent = (event) => {
   const key = event.key;
 
@@ -384,6 +572,7 @@ const handleKeyDownEvent = (event) => {
   }
 };
 
+// Handles all input events
 const handleInputEvent = (event) => {
   if (currentPath.includes("transactions.html")) {
     const transactions = searchTransactions(event);

@@ -408,24 +408,28 @@
   ],
   "budgets": [
     {
+      "id": "budget-1",
       "category": "Entertainment",
       "maximum": 50.0,
-      "theme": "#277C78"
+      "theme": "bg-[#277C78]"
     },
     {
+      "id": "budget-2",
       "category": "Bills",
       "maximum": 750.0,
-      "theme": "#82C9D7"
+      "theme": "bg-[#82C9D7]"
     },
     {
+      "id": "budget-3",
       "category": "Dining Out",
       "maximum": 75.0,
-      "theme": "#F2CDAC"
+      "theme": "bg-[#F2CDAC]"
     },
     {
+      "id": "budget-4",
       "category": "Personal Care",
       "maximum": 100.0,
-      "theme": "#626070"
+      "theme": "bg-[#626070]"
     }
   ],
   "pots": [

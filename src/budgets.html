@@ -15,6 +15,8 @@
       crossorigin="anonymous"
     ></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
     </style>
@@ -24,7 +26,7 @@
     <div id="app-container" class="flex min-h-screen">
       <!-- SIDEBAR -->
       <aside
-        class="fixed bottom-0 left-0 z-50 flex h-20 w-full shrink-0 p-4 bg-gray-900 rounded-tr-xl rounded-tl-xl lg:static lg:pl-0 lg:rounded-tl-none lg:h-screen lg:w-72 lg:flex-col lg:justify-between"
+        class="fixed bottom-0 left-0 z-50 flex h-20 w-full shrink-0 p-4 bg-gray-900 rounded-tr-xl rounded-tl-xl xl:pl-0 xl:rounded-tl-none xl:fixed xl:h-screen xl:w-72 xl:flex-col xl:justify-between"
       >
         <div
           id="container"
@@ -139,13 +141,54 @@
       </aside>
 
       <!-- MAIN CONTENT -->
-      <main class="min-w-0 flex-1 bg-[#f8f4f0] p-4 pb-24 lg:p-8 lg:pb-8">
+      <main
+        class="min-w-0 flex-1 bg-[#f8f4f0] p-4 pb-24 lg:p-8 lg:pb-8 xl:ml-72"
+      >
         <!-- HEADER -->
-        <header>
+        <header class="flex align-center justify-between">
           <h1 class="text-3xl font-bold lg:text-4xl">Overview</h1>
+          <button
+            id="new-budget-btn"
+            class="p-4 w-auto bg-gray-900 text-white md:w-51.25 md:p-4 font-bold rounded-md hover:cursor-pointer"
+          >
+            + Add new Budget
+          </button>
         </header>
 
         <!-- SUMMARY -->
+        <section class="mt-8">
+          <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+            <div class="mt-4 w-150">
+              <canvas id="myChart"></canvas>
+            </div>
+            <div id="budget-container" class="mt-4 w-full"></div>
+          </div>
+        </section>
+        <!-- Add New Pot Modal -->
+        <div
+          class="new-budget-modal fixed inset-0 bg-black/75 z-10 hidden justify-center"
+        >
+          <div
+            class="bg-white min-h-[60vh] w-72 max-md:m-auto overflow-y-auto md:w-140 self-center z-30 p-6 rounded-md"
+          >
+            <div class="first-item flex align-center justify-between">
+              <div>
+                <p class="font-bold text-3xl text-gray-900">Add New Budget</p>
+              </div>
+              <i
+                data-btn="4"
+                id="close-new-budget-modal-btn"
+                class="fa-solid fa-circle-plus fa-rotate-by text-3xl pt-1 hover:cursor-pointer"
+                style="--fa-rotate-angle: 315deg"
+              ></i>
+            </div>
+            <p class="mt-4 text-gray-500">
+              Choose a category to set a spending budget. These categories can
+              help you monitor spendings.
+            </p>
+            <div class="budget-form-container mt-4"></div>
+          </div>
+        </div>
       </main>
     </div>
 

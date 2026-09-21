@@ -11,6 +11,8 @@ import {
   renderAddMoney,
   renderWithdrawMoneyPreview,
   renderWithdrawMoney,
+  renderBudgetsPage,
+  renderNewBudgetForm,
 } from "./render.js";
 
 const currentPath = window.location.pathname;
@@ -24,6 +26,10 @@ let selectedPotTheme;
 let editedPotTheme;
 // This variable is the single source of truth for the budgets page.
 let budgets = [];
+let selectedBudgetCategory;
+let selectedBudgetTheme;
+let editedBudgetTheme;
+let editedBudgetCategory;
 // This variable updates the data that is being rendered in the UI in the transactions page.
 export let displayedTransactions = [];
 // This variable updates the data that is being rendered in the UI in the recurring bills page.
@@ -51,7 +57,52 @@ export async function getData() {
 
 await getData();
 
-console.log(pots, budgets);
+export function getMatchingTransactionsForBudgets() {
+  const testBudget = budgets.map((budget) => {
+    const testTransactions = transactions.filter((transaction) => {
+      if (transaction.category === budget.category) {
+        return transaction;
+      }
+    });
+
+    return testTransactions;
+  });
+
+  const firstThreeObjects = testBudget.map((budget) => {
+    const transactionObjects = budget.slice(0, 3);
+
+    return transactionObjects;
+  });
+
+  return firstThreeObjects;
+}
+
+export function filterMatchingTransactionsAmount() {
+  const matchingTransaction = getMatchingTransactionsForBudgets();
+
+  const goAheadWithFilter = matchingTransaction.map((transaction) => {
+    const confirmFilter = transaction.map((payment) => {
+      return { amount: payment.amount };
+    });
+    return confirmFilter;
+  });
+
+  return goAheadWithFilter;
+}
+
+export function calculateMatchingTransactionsTotalAmount() {
+  const transactionsAmount = filterMatchingTransactionsAmount();
+
+  const transactionsTotalAmount = transactionsAmount.map((transaction) => {
+    const totalAmount = transaction.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.amount;
+    }, 0);
+
+    return totalAmount;
+  });
+
+  return transactionsTotalAmount;
+}
 
 export function getCurrentPageTransactions() {
   const startIndex = (currentPage - 1) * transactionsPerPage;
@@ -76,7 +127,6 @@ export function calculateTotalTransactions() {
   const sum = totalAmount.reduce((accumulator, currentValue) => {
     return accumulator + currentValue.amount;
   }, 0);
-  console.log(sum);
 }
 
 export function calculateTotalBills() {
@@ -103,6 +153,33 @@ if (currentPath.includes("pots.html")) {
   renderNewPotForm();
 }
 
+if (currentPath.includes("budgets.html")) {
+  renderBudgetsPage(budgets);
+  renderNewBudgetForm();
+  const ctx = document.getElementById("myChart");
+
+  const pieChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+      datasets: [
+        {
+          label: "# of Votes",
+          data: [12, 19, 3, 5, 2, 3],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+}
+
 export function nextPage(event) {
   const totalPages = Math.ceil(
     displayedTransactions.length / transactionsPerPage,
@@ -120,7 +197,6 @@ export function nextPage(event) {
 
     // Safety Check: This prevents going past the last available page button
     if (index >= btnPage.length) {
-      console.log("Already on the last page!");
       return;
     }
 
@@ -150,7 +226,6 @@ export function previousPage(event) {
 
     // Safety Check: This prevents going past the last available page button
     if (index >= btnPage.length) {
-      console.log("Already on the last page!");
       return;
     }
 
@@ -209,11 +284,14 @@ export function handleThemeSelection(themeBtn) {
     Peach: "bg-[#F2CDAC]",
     Violet: "bg-[#826CB0]",
   };
-  console.log(selectedTheme);
   const themePreview = document.querySelector(".theme-preview");
   const themeName = document.querySelector(".theme-name");
 
   themePreview.classList.remove("bg-[#277C78]");
+
+  if (selectedTheme) {
+    themePreview.classList.remove(`${themes[selectedTheme]}`);
+  }
   themePreview.classList.add(`${themes[selectedTheme]}`);
   themeName.textContent = selectedTheme;
 
@@ -248,6 +326,120 @@ export function editPotThemeSelection(editedPotThemeBtn) {
   editedPotTheme = activeTheme;
 
   return activeTheme;
+}
+
+export function newBudgetThemeSelection(newBudgetThemeBtn) {
+  const selectedTheme = newBudgetThemeBtn.dataset.budgettheme;
+  const newBudgetThemes = {
+    Teal: "bg-[#277C78]",
+    Charcoal: "bg-[#626070]",
+    Turquoise: "bg-[#82C9D7]",
+    Peach: "bg-[#F2CDAC]",
+    Violet: "bg-[#826CB0]",
+  };
+
+  const themePreview = document.querySelector(".budget-theme-preview");
+  const themeName = document.querySelector(".budget-theme-name");
+  const activeTheme = newBudgetThemes[selectedTheme];
+
+  themePreview.classList.remove("bg-[#277C78]");
+  themePreview.classList.remove("bg-[#277c78]");
+  themePreview.classList.remove("bg-[#626070]");
+  themePreview.classList.remove("bg-[#82C9D7]");
+  themePreview.classList.remove("bg-[#F2CDAC]");
+  themePreview.classList.remove("bg-[#826CB0]");
+  themePreview.classList.add(`${newBudgetThemes[selectedTheme]}`);
+  themeName.textContent = selectedTheme;
+
+  selectedBudgetTheme = activeTheme;
+
+  return activeTheme;
+}
+
+export function editBudgetThemeSelection(editedBudgetThemeBtn) {
+  const selectedTheme = editedBudgetThemeBtn.dataset.editedtheme;
+  const editBudgetThemes = {
+    Teal: "bg-[#277C78]",
+    Charcoal: "bg-[#626070]",
+    Turquoise: "bg-[#82C9D7]",
+    Peach: "bg-[#F2CDAC]",
+    Violet: "bg-[#826CB0]",
+  };
+
+  const budget = editedBudgetThemeBtn.closest(".budget");
+
+  const themePreview = budget.querySelector(".budget-theme-preview");
+  const themeName = budget.querySelector(".budget-theme-name");
+
+  themePreview.classList.remove("bg-[#277c78]");
+  themePreview.classList.add(`${editBudgetThemes[selectedTheme]}`);
+  themeName.textContent = selectedTheme;
+
+  const activeTheme = editBudgetThemes[selectedTheme];
+
+  editedBudgetTheme = activeTheme;
+
+  return activeTheme;
+}
+
+export function newBudgetCategorySelection(newBudgetCategoryBtn) {
+  const selectedCategory = newBudgetCategoryBtn.dataset.budgetcategory;
+  const categoryPreview = document.querySelector(".budget-category-name");
+
+  categoryPreview.textContent = selectedCategory;
+
+  selectedBudgetCategory = selectedCategory;
+}
+
+export function editBudgetCategorySelection(editBudgetCategoryBtn) {
+  const selectedCategory = editBudgetCategoryBtn.dataset.editedcategory;
+  const budget = editBudgetCategoryBtn.closest(".budget");
+  const categoryPreview = budget.querySelector(".budget-category-name");
+
+  categoryPreview.textContent = selectedCategory;
+
+  editedBudgetCategory = selectedCategory;
+}
+
+export function editBudget(event) {
+  if (currentPath.includes("budgets.html")) {
+    const budgetElement = event.target.closest(".budget");
+    const amountInput = budgetElement.querySelector("#budget-input");
+    const budgetAmount = Number(amountInput.value);
+
+    const budgetId = budgetElement.dataset.id;
+
+    const updatedBudgetsArray = budgets.map((budget) => {
+      if (budget.id === budgetId) {
+        return {
+          id: budget.id,
+          category: editedBudgetCategory,
+          maximum: budgetAmount,
+          theme: editedBudgetTheme,
+        };
+      } else {
+        return budget;
+      }
+    });
+
+    budgets = updatedBudgetsArray;
+
+    renderBudgetsPage(budgets);
+    amountInput.value = "";
+  }
+}
+
+export function deleteBudget(event) {
+  if (currentPath.includes("budgets.html")) {
+    const budgetElement = event.target.closest(".budget");
+    const budgetId = budgetElement.dataset.id;
+
+    const updatedBudgetsArray = budgets.filter((budget) => {
+      return budget.id !== budgetId;
+    });
+
+    renderBudgetsPage(updatedBudgetsArray);
+  }
 }
 
 export function editPot(event) {
@@ -294,7 +486,6 @@ export function deletePot(event) {
       return pot.id !== potId;
     });
 
-    console.log(updatedPotsArray);
     renderPotsPage(updatedPotsArray);
   }
 }
@@ -316,6 +507,23 @@ export function createNewPot(index) {
 
     potNameInput.value = "";
     targetInput.value = "";
+  }
+}
+
+export function createNewBudget(index) {
+  if (currentPath.includes("budgets.html")) {
+    const maximumSpendInput = document.querySelector("#budget-input");
+
+    let newBudget = {
+      id: "budget-" + index,
+      category: selectedBudgetCategory,
+      maximum: maximumSpendInput.value,
+      theme: selectedBudgetTheme,
+    };
+    budgets = [...budgets, newBudget];
+    renderBudgetsPage(budgets);
+
+    maximumSpendInput.value = "";
   }
 }
 
@@ -344,8 +552,6 @@ export function confirmAddSavingsAmount(event) {
   const newProgress = ((newTotal / pot.target) * 100).toFixed(2);
 
   pot.total += amount;
-
-  console.log(pot.total);
 
   renderAddMoney(event, newTotal, newProgress);
   savingsAmountInput.value = "";
@@ -378,8 +584,6 @@ export function confirmWithdrawSavingsAmount(event) {
   const newProgress = ((newTotal / pot.target) * 100).toFixed(2);
 
   pot.total -= amount;
-
-  console.log(pot.total);
 
   renderWithdrawMoney(event, newTotal, newProgress);
 }
@@ -452,8 +656,6 @@ export function sortTransactions(sortType) {
 
   displayedTransactions = sortedTransactions;
 
-  console.log(displayedTransactions);
-
   return displayedTransactions;
 }
 
@@ -506,8 +708,6 @@ export function categorizeTransactions(category) {
 
     displayedTransactions = categorizedTransactions;
   }
-
-  console.log(displayedTransactions);
 
   return displayedTransactions;
 }
